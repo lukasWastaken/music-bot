@@ -36,6 +36,7 @@ async def on_ready():
     if channel:
         await channel.send("Bot has started up!")
     print(f'Logged in as {bot.user} (ID: {bot.user.id})')
+
 @bot.tree.command(name="stop", description="Shuts down the bot, useful for simulating crashes")
 async def stop(interaction: discord.Interaction):
     channel = bot.get_channel(LOG_CHANNEL_ID)
@@ -89,8 +90,7 @@ async def play(interaction: discord.Interaction):
         await interaction.response.send_message("The queue is empty.")
         return
 
-    song_name = mainqueue.get_current_song()
-    file_path = mainqueue.name_to_path(song_name)
+    file_path = mainqueue.get_current_song()
 
     channel = interaction.user.voice.channel
     voice_client = interaction.guild.voice_client
@@ -110,7 +110,7 @@ async def play(interaction: discord.Interaction):
 
     voice_client.play(discord.FFmpegPCMAudio(wav_file_path), after=mainqueue.goto_next_song())
 
-    await interaction.response.send_message(f"Now playing: {song_name}")
+    await interaction.response.send_message(f"Playback Started.")
 
     while voice_client.is_playing():
         await asyncio.sleep(1)
@@ -131,9 +131,9 @@ async def canloop(interaction: discord.Interaction, userinput: str):
     else:
         await interaction.response.send_message("Sorry, I could not understand the parameter.")
 
-@bot.tree.command(name="add_song_to_queue", description="Adds a song to the queue.")
-async def add_song_to_queue(interaction: discord.Interaction, song_name: str):
-    result = mainqueue.add_to_queue(song_name)
+@bot.tree.command(name="add_song_to_queue", description="Adds a song to the queue. Enter the URL")
+async def add_song_to_queue(interaction: discord.Interaction, song_url: str):
+    result = mainqueue.add_to_queue(song_url)
     await interaction.response.send_message(result)
 
 bot.run(TOKEN)
