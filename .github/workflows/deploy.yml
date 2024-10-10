@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - 49-add-auto-deployment
 
 jobs:
   deploy:
